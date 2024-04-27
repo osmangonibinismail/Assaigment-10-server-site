@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // jYZIaOVoYWUFotMz
 
@@ -30,12 +30,38 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    const artAndCraftCollection = client.db('artAndCraftDB').collection('artAndCraft');
+
+
+    app.get ('/add', async (req, res) =>{
+        const cursor = artAndCraftCollection.find();
+        const result = await cursor.toArray();
+        res.send(result);
+    })
+
+    app.get('/add/:id', async (req, res) =>{
+        const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await artAndCraftCollection.findOne(query);
+        res.send(result);
+    })
+
+    app.post('/add', async(req, res) =>{
+        const newArtAndCraftAdd = req.body;
+        console.log(newArtAndCraftAdd);
+        const result = await artAndCraftCollection.insertOne(newArtAndCraftAdd);
+        res.send(result);
+    })
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
