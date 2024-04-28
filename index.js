@@ -55,6 +55,29 @@ async function run() {
         res.send(result);
     })
 
+    app.put('/add/:id', async(req, res) => {
+        const id = req.params.id;
+        const filter = {_id: new ObjectId(id)}
+        const options = {upsert : true };
+        const artAndCraftUpdated = req.body
+        const artAndCraft = {
+            $set:{
+                name: artAndCraftUpdated.name,
+                Subcategory: artAndCraftUpdated.Subcategory,
+                Price: artAndCraftUpdated.Price,
+                Rating: artAndCraftUpdated.Rating,
+                description: artAndCraftUpdated.description,
+                processing_time: artAndCraftUpdated.processing_time,
+                customization: artAndCraftUpdated.customization,
+                stockStatus: artAndCraftUpdated.stockStatus,
+                photoURL: artAndCraftUpdated.photoURL,
+            }
+
+            }
+            const result = await artAndCraftCollection.updateOne(filter, artAndCraft, options);
+            res.send(result);
+    })
+
 
 
     // Send a ping to confirm a successful connection
