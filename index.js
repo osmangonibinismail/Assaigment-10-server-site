@@ -42,6 +42,7 @@ async function run() {
 
     app.get('/add/:id', async (req, res) =>{
         const id = req.params.id;
+        console.log(id)
         const query = {_id: new ObjectId(id)}
         const result = await artAndCraftCollection.findOne(query);
         res.send(result);
